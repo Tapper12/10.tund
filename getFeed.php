@@ -9,6 +9,18 @@
   $getField = "?q=%23Paris&result_type=recent";
   $requestMethod = "GET";
 
+  //faili sisu tagasi objektiks
+  $file_data = json_decode(file_get_contents($file_name));
+
+  $delay = 10; //10 sek delay
+
+  if(strtotime(date("c")) - (strtotime($file_data->date)) < $delay){
+
+    echo json_encode($file_data);
+
+    return;
+  }
+
   $twitter = new TwitterAPIExchange($config);
 
   $dataFromAPI = $twitter->setGetfield($getField)
@@ -23,11 +35,31 @@
   //Millal tegime päringu
   $object->date = date("c");
   //Saadud tweedid
-  $object->statues = json_decode ($dataFromAPI)->statuses;
+  $object->statuses = json_decode ($dataFromAPI)->statuses;
+
+  //Lisan vanad, mis jäänud tekstifaili, siia juurde
+  foreach($file_data->statuses as $old_status){
+    $exists = false;
+
+    foreach($object->statuses as $new_status){
+
+      //Kas on olemas?
+      if($old_status->id == $new_status->id){
+        $exists = true;
+      }
+    }
+
+    //Ei olnud olemas
+    if($exists == false){
+      array_push($object->statuses, $old_status);
+    }
+  }
+
+  echo count($object->statuses);
 
   file_put_contents($file_name, json_encode($object));
 
-  echo json_encode($object);
+  //echo json_encode($object);
 
 
 
