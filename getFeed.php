@@ -55,11 +55,11 @@
     }
   }
 
-  echo count($object->statuses);
+  //echo count($object->statuses);
 
   file_put_contents($file_name, json_encode($object));
 
-  //echo json_encode($object);
+  echo json_encode($object);
 
 
 
