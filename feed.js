@@ -14,7 +14,9 @@ $(function() {
 
 
 });
+var history = [];
 
+$.inArray(id, history);
 
 function getTweets(){
 
@@ -61,6 +63,11 @@ function printTweets(newTweets){
 	$grid.prepend(tweetsHTML)
 	     .isotope('prepended', tweetsHTML)
 		 .isotope('layout');
+
+  //Oota ja siis küsi uuesti
+  window.setTimeout(function(){
+    getTweets();
+  },5000);
 
 
 
